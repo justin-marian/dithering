@@ -78,6 +78,7 @@ result = ordered_bw(img, kind="bayer", n=8)
 All functions return grayscale uint8 images (0/255), except multi-level which returns RGB.
 
 ### Data Files
+
 ```
 src/adaptive_diffusion/kernels/data/
 ├── weights_ostromoukhov.txt    # 256 × 3 matrix [wR, wDL, wD]
