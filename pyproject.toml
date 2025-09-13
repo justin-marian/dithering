@@ -9,7 +9,7 @@ description = "Playground for ordered/adaptive/error-diffusion/multi-level/naive
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "UNLICENSE"}
-authors = [{ name = "justin-mp", email = "pmarianjustin@gmail.com" }]
+authors = [{ name = "justin-marian", email = "pmarianjustin@gmail.com" }]
 
 # Runtime dependencies
 dependencies = [
