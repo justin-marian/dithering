@@ -45,22 +45,22 @@ dither --task multi_level --levels 6 --save
 
 ## Implemented Methods
 
-• **Naïve:** global, mean, percentile, Otsu thresholding
-• **Ordered:** Bayer matrices (2×2 to 16×16), halftone spot functions  
-• **Random:** per-pixel random threshold
-• **Error diffusion:** Floyd–Steinberg, Jarvis–Judice–Ninke, Stucki, Sierra family, Burkes, Atkinson, Stevenson–Arce
-• **Adaptive:** Ostromoukhov (content-aware weights), Zhou–Fang (threshold jitter)
-• **Multi-level:** custom palette diffusion with any number of gray levels
+- **Naïve:** Global, mean, percentile, and Otsu thresholding
+- **Ordered:** Bayer matrices (2×2 to 16×16), halftone spot functions
+- **Random:** Per-pixel random threshold
+- **Error Diffusion:** Floyd–Steinberg, Jarvis–Judice–Ninke, Stucki, Sierra family, Burkes, Atkinson, Stevenson–Arce
+- **Adaptive Diffusion:** Ostromoukhov (content-aware weights), Zhou–Fang (threshold jitter)
+- **Multi-level:** Custom palette diffusion with configurable gray levels
 
 ## Key Options
 
-• `--task {naive,ordered,random,error_diffusion,adaptive_diffusion,multi_level}`
-• `--kernels <list>` - error diffusion kernels (e.g., FS,JJN,stucki)
-• `--threshold <0-255>` - threshold value
-• `--bayer-n {2,4,8,16}` - Bayer matrix size
-• `--levels <int>` - number of gray levels for multi-level
-• `--save` - write results to ./outputs/
-• `--no-serpentine` - disable alternating scan
+- `--task {naive, ordered, random, error_diffusion, adaptive_diffusion, multi_level}`: Selects the dithering algorithm.
+- `--kernels <list>`: Specifies error diffusion kernels (e.g., FS, JJN, stucki).
+- `--threshold <0-255>`: Sets the threshold value for naïve methods.
+- `--bayer-n {2, 4, 8, 16}`: Chooses Bayer matrix size for ordered dithering.
+- `--levels <int>`: Number of gray levels for multi-level dithering.
+- `--save`: Saves output images to `./outputs/`.
+- `--no-serpentine`: Disables alternating scan direction in error diffusion.
 
 ## Library API
 
