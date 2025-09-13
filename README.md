@@ -109,4 +109,14 @@ src/adaptive_diffusion/kernels/data/
 
 **Naming pattern:** `{image}_{method}_{algorithm}[_parameters].png`
 
-**License:** UNLICENSE (public domain)
+### License UNLICENSE (public domain)
+
+```
+Documentation:
+This README file provides information about the dithering project, 
+including usage instructions, features, and relevant details for contributors and users.
+
+License:
+This project is released under a short license description. 
+Please refer to the LICENSE file for full terms and conditions.
+```
