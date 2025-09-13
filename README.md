@@ -20,7 +20,7 @@ Collection of classic and modern dithering algorithms that convert grayscale/col
 
 Uses random image from `./assets/` or falls back to `skimage.data.astronaut()`. 
 
-Results preview and/or save to `./outputs/`.
+Results preview and/or save to `./output/`.
 
 ## Install
 
