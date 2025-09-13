@@ -19,6 +19,7 @@ Collection of classic and modern dithering algorithms that convert grayscale/col
 - palette diffusion
 
 Uses random image from `./assets/` or falls back to `skimage.data.astronaut()`. 
+
 Results preview and/or save to `./outputs/`.
 
 ## Install
