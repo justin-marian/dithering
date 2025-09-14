@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
+"""Artistic error-diffusion kernels.
+
+Defines a family of hand-crafted kernels intended for artistic or
+non-photorealistic dithering styles, along with their alias mappings.
+"""
 
 from __future__ import annotations
 
 from typing import Dict
 
-from .ktype import Kernel
+from ktype import Kernel
 
 ARTISTIC: Dict[str, Kernel] = {
     "threshold": ([

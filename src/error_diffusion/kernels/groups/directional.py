@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
+"""Directional error-diffusion kernels.
+
+Defines simple directional kernels (diagonal, cross, horizontal, vertical)
+and their alias mappings for experimental dithering effects.
+"""
 
 from __future__ import annotations
 
 from typing import Dict
 
-from .ktype import Kernel
+from ktype import Kernel
 
 DIRECTIONAL: Dict[str, Kernel] = {
     "diagonal": ([

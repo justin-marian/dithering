@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""Thresholding methods for naive dithering.
+
+This package-level module exposes multiple threshold selection strategies
+(global, mean, percentile, and Otsu) under a unified namespace.
+"""
 
 from __future__ import annotations
 

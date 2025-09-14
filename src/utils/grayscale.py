@@ -5,8 +5,7 @@ from __future__ import annotations
 from typing import Literal, Union
 
 import numpy as np
-
-from .prep_img import process_dtype_arg
+from prep_img import process_dtype_arg
 
 
 def to_grayscale(

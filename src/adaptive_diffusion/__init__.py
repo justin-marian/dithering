@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
+"""Adaptive diffusion dithering algorithms.
+
+This subpackage provides implementations of Ostromoukhov's and Zhou-Fang's
+adaptive diffusion methods for black-white dithering.
+"""
 
 from __future__ import annotations
 
-from .group import ostromoukhov_bw, zhou_fang_bw
+from .adaptive_dif import adaptive_diff_bw
 
 __all__ = [
-    "ostromoukhov_bw",
-    "zhou_fang_bw",
+    "adaptive_diff_bw",
 ]

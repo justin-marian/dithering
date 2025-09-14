@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Noise-based dithering modes (additive and jitter)."""
 
 from __future__ import annotations
 

@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""Kernel group definitions for error-diffusion dithering.
+
+This module collects canonical kernels and their alias mappings
+across different research families (classic, sierra, burkes, etc.).
+"""
 
 from __future__ import annotations
 

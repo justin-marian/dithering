@@ -1,4 +1,11 @@
-# -*- coding : utf-8 -*-
+# -*- coding: utf-8 -*-
+"""Utility functions for image preprocessing and grayscale operations.
+
+This package provides helper functions for:
+- Grayscale conversion and binarization
+- Threshold mapping to grayscale domain
+- Image preparation (uint8 conversion, tuple unpacking)
+"""
 
 from __future__ import annotations
 

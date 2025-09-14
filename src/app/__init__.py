@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+"""Application package for the dithering project.
+
+Exposes CLI argument parsing, task dispatchers, and visualization helpers.
+"""
 
 from __future__ import annotations
 

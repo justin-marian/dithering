@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""Naive threshold-based dithering methods.
+
+This subpackage provides simple binarization approaches without
+error diffusion, including global, mean, percentile, and Otsu thresholding.
+"""
 
 from __future__ import annotations
 

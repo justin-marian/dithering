@@ -1,30 +1,47 @@
 # -*- coding: utf-8 -*-
+"""Generic error diffusion dithering.
+
+Implements a black-white error diffusion method supporting all kernels
+defined in ``DITHERING_KERNELS`` with serpentine scanning and alias resolution.
+"""
 
 from __future__ import annotations
 
 from typing import List, Literal, Tuple, Union
 
 import numpy as np
+from kernels import DITHERING_KERNELS, KERNEL_ALIASES, resolve_kernel_name
 
-from ..utils.grayscale import binarize, grayscale, map_threshold_graydomain
-from .kernels import DITHERING_KERNELS, KERNEL_ALIASES, resolve_kernel_name
+from utils import binarize, grayscale, map_threshold_graydomain
 
 
 def error_diff_bw(
     img: np.ndarray,
     *,
-    dtype: Union[Literal['u8'], Literal['f32'], np.dtype, type] = 'u8',
+    dtype: Union[Literal["u8"], Literal["f32"], np.dtype, type] = "u8",
     kernel_type: str = "floyd_steinberg",
     threshold: Union[int, float] = 128,
-    serpentine: bool = True
+    serpentine: bool = True,
 ) -> np.ndarray:
-    """
-    Generic error-diffusion to 1-bit using any kernel from DITHERING_KERNELS.
+    """Apply error diffusion dithering with the specified kernel.
 
-    Kernel format:
-      DITHERING_KERNELS[name] = (offsets, denom)
-      offsets: [ ((dy, dx), weight), ... ]  with dy >= 0 and dx not in Z
-      denom:    kernel divisor (often the weight sum)
+    Parameters
+    ----------
+    img : np.ndarray
+        Input color image (H, W, C). Converted to grayscale internally.
+    dtype : {"u8","f32"} | np.dtype | type, optional
+        Output dtype for the binarized image. Default "u8".
+    kernel_type : str, optional
+        Name or alias of the diffusion kernel. Default "floyd_steinberg".
+    threshold : int | float, optional
+        Global threshold for binarization. Default 128.
+    serpentine : bool, optional
+        Alternate scan direction per row (True) or always left→right (False).
+
+    Returns
+    -------
+    np.ndarray
+        Dithered 1-bit image mapped to `dtype`.
     """
     kname = resolve_kernel_name(kernel_type)
     if kname not in DITHERING_KERNELS:
@@ -34,7 +51,7 @@ def error_diff_bw(
         )
 
     offsets, denom = DITHERING_KERNELS[kname]
-    
+
     # Check causality (our scan is top-down; dy<0 would target already-processed rows)
     if any(dy_dx[0] < 0 for dy_dx, _ in offsets):
         raise ValueError(
@@ -47,12 +64,12 @@ def error_diff_bw(
     max_dy = 0
     dden = float(denom)
     for (dy_dx, w) in offsets:
-        dy, dx = dy_dx  # (row, col)
+        dy, dx = dy_dx
         max_dy = max(max_dy, dy)
         norm_offsets.append((dy, dx, float(w) / dden))
 
     # Grayscale buffer in float32 [0..255]
-    g = grayscale(img, dtype)     # (H, W)
+    g = grayscale(img, dtype)  # (H, W)
     h, w = g.shape
     thr = map_threshold_graydomain(threshold, dtype)
 
@@ -66,15 +83,14 @@ def error_diff_bw(
         for dy in range(1, max_dy + 1):
             err_rows[dy].fill(0.0)
 
-        x_iter = range(w - 1, -1, -1) if flip else range(0, w)
-
-        for x in x_iter:
+        xs = range(w - 1, -1, -1) if flip else range(0, w)
+        for x in xs:
             old = float(g[y, x]) + err_rows[0][x]
             new = 255.0 if old >= thr else 0.0
             dither_img[y, x] = 255 if new > 0.0 else 0
             e = old - new
 
-            # diffuse error
+            # Diffuse error
             for dy, dx, wn in norm_offsets:
                 xx = x + (-dx if flip else dx)
                 yy = y + dy

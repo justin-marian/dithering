@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
+"""Experimental error-diffusion kernels.
+
+Defines a set of non-standard or exploratory dithering kernels
+(e.g., ripple, cluster, serpentine, diamond, hexagonal)
+and their alias mappings.
+"""
 
 from __future__ import annotations
 
 from typing import Dict
 
-from .ktype import Kernel
+from ktype import Kernel
 
 EXPERIMENTAL: Dict[str, Kernel] = {
     "ripple": ([

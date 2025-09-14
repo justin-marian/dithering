@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
+"""Atkinson error-diffusion kernel.
+
+Defines the Atkinson dithering kernel (Bill Atkinson, 1980s)
+and its alias mapping.
+"""
 
 from __future__ import annotations
 
 from typing import Dict
 
-from .ktype import Kernel
+from ktype import Kernel
 
 ATKINSON: Dict[str, Kernel] = {
     "atkinson": ([

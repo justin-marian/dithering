@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Noise distribution generators for random dithering."""
 
 from __future__ import annotations
 

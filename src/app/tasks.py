@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+"""Task runners for the dithering demo.
+
+Each task takes an input image and returns a list of output images plus their names.
+"""
 
 from __future__ import annotations
 
@@ -6,18 +10,19 @@ from pathlib import Path
 from typing import List, Tuple
 
 import numpy as np
+from visualize import show_images
 
-from ..adaptive_diffusion.adaptive_dif import adaptive_bw
-from ..error_diffusion.err_diff import error_diff_bw
-from ..multi_level.palette import palette_bw
-from ..naive.threshold import threshold_bw
-from ..ordered.ordered import ordered_bw
-from ..utils.grayscale import grayscale
-from .visualize import show_images
+from adaptive_diffusion import adaptive_diff_bw
+from error_diffusion import error_diff_bw
+from multi_level import palette_bw
+from naive import threshold_bw
+from ordered import ordered_bw
+from utils import grayscale
 
 THIS_FILE = Path(__file__).resolve()
 ROOT = THIS_FILE.parents[2]
-OUT  = ROOT / "output"
+OUT = ROOT / "output"
+
 
 def task_adaptive_diffusion(
     img: np.ndarray,
@@ -27,13 +32,10 @@ def task_adaptive_diffusion(
     save: bool = False,
     outdir: Path = ROOT / "output",
 ) -> Tuple[List[np.ndarray], List[str]]:
-    """
-    Adaptive diffusion dithering using Ostromoukhov and Zhou-Fang methods.
-    Given a color image, applies both dithering methods and returns the results.
-    """
+    """Adaptive diffusion dithering: Ostromoukhov and Zhou-Fang."""
     outs, names = [], []
 
-    d_ostro = adaptive_bw(
+    d_ostro = adaptive_diff_bw(
         img,
         method="ostromoukhov",
         dtype="u8",
@@ -43,7 +45,7 @@ def task_adaptive_diffusion(
     outs.append(d_ostro)
     names.append("ostromoukhov")
 
-    d_zf = adaptive_bw(
+    d_zf = adaptive_diff_bw(
         img,
         method="zhou_fang",
         dtype="u8",
@@ -57,6 +59,7 @@ def task_adaptive_diffusion(
     show_images(outs, names, save=save, outdir=outdir, stem=img_name, task="adaptive_diffusion")
     return outs, names
 
+
 def task_error_diffusion(
     img: np.ndarray,
     img_name: str,
@@ -65,23 +68,23 @@ def task_error_diffusion(
     threshold=128,
     serpentine=True,
     save=False,
-    outdir: Path = ROOT / "output"
+    outdir: Path = ROOT / "output",
 ) -> Tuple[List[np.ndarray], List[str]]:
-    """
-    Error diffusion dithering using specified kernels.
-    Given a color image and a list of kernel names, applies error diffusion
-    dithering with each kernel and returns the results.
-    """
+    """Error diffusion dithering with the specified kernels."""
     outs, names = [], []
     for kname in kernels:
         d_img = error_diff_bw(
-            img, dtype="u8", kernel_type=kname,
-            threshold=threshold, serpentine=serpentine
+            img,
+            dtype="u8",
+            kernel_type=kname,
+            threshold=threshold,
+            serpentine=serpentine,
         )
-        outs.append(d_img) 
+        outs.append(d_img)
         names.append(kname)
     show_images(outs, names, save=save, outdir=outdir, stem=img_name, task="error_diffusion")
     return outs, names
+
 
 def task_naive(
     img: np.ndarray,
@@ -91,19 +94,15 @@ def task_naive(
     save: bool = False,
     outdir: Path = OUT,
 ) -> Tuple[List[np.ndarray], List[str]]:
-    """
-    Naive dithering using various thresholding methods.
-    Applies global, mean, percentile, and Otsu thresholding methods to a color image
-    and returns the resulting binary images.
-    """
+    """Naive thresholding variants: global, mean, percentile, Otsu."""
     outs: List[np.ndarray] = []
     names: List[str] = []
 
     cfgs = [
-        ("global",     dict(threshold=threshold)),
-        ("mean",       dict()),
-        ("percentile", dict(percentile=50.0)),
-        ("otsu",       dict()),
+        ("global", {"threshold": threshold}),
+        ("mean", {}),
+        ("percentile", {"percentile": 50.0}),
+        ("otsu", {}),
     ]
 
     for method, kwargs in cfgs:
@@ -114,19 +113,16 @@ def task_naive(
     show_images(outs, names, save=save, outdir=outdir, stem=img_name, task="naive")
     return outs, names
 
+
 def task_random(
     img: np.ndarray,
     img_name: str,
     *,
-    save=False,
-    outdir: Path = ROOT / "output"
+    save: bool = False,
+    outdir: Path = ROOT / "output",
 ) -> Tuple[List[np.ndarray], List[str]]:
-    """
-    Noise dithering: per-pixel random threshold in [0..255].
-    Given a color image, applies random threshold dithering and returns the result.
-    Returns a single binary image.
-    """
-    g = grayscale(img, 'u8')
+    """Noise dithering: per-pixel random threshold in [0..255]."""
+    g = grayscale(img, "u8")
     rng = np.random.default_rng()
     noise = rng.integers(0, 256, size=g.shape, dtype=np.uint16)
 
@@ -137,6 +133,7 @@ def task_random(
     show_images(outs, names, save=save, outdir=outdir, stem=img_name, task="random")
     return outs, names
 
+
 def task_ordered(
     img: np.ndarray,
     img_name: str,
@@ -145,54 +142,49 @@ def task_ordered(
     save: bool = False,
     outdir: Path = OUT,
 ) -> Tuple[List[np.ndarray], List[str]]:
-    """
-    Ordered dithering showcase:
-      - Bayer matrix of size n (power of two)
-      - Halftone (spot function) with tile size n @ 45 degrees
-    Given a color image, applies ordered dithering using both Bayer and halftone
-    methods and returns the results.
-    """
-    gray = grayscale(img, 'u8')
+    """Ordered dithering showcase: Bayer (n) and halftone (n @ 45°)."""
+    gray = grayscale(img, "u8")
 
     d_bayer = ordered_bw(gray, kind="bayer", n=n, dtype="u8")
-    d_half  = ordered_bw(gray, kind="halftone", n=n, angle_deg=45.0,
-                         spot="cos+cos", dtype="u8")
+    d_half = ordered_bw(
+        gray,
+        kind="halftone",
+        n=n,
+        angle_deg=45.0,
+        spot="cos+cos",
+        dtype="u8",
+    )
 
-    outs  = [d_bayer, d_half]
+    outs = [d_bayer, d_half]
     names = [f"bayer_{n}", f"halftone_{n}px_45deg"]
 
     show_images(outs, names, save=save, outdir=outdir, stem=img_name, task="ordered")
     return outs, names
+
 
 def task_multi_level(
     img: np.ndarray,
     img_name: str,
     *,
     levels: int = 4,
-    type: str = "floyd_steinberg",
+    kernel_type: str = "floyd_steinberg",
     save: bool = False,
     outdir: Path = OUT,
 ) -> Tuple[List[np.ndarray], List[str]]:
-    """
-    Multi-level grayscale dithering using the palette-based error diffusion.
-    Builds an evenly spaced gray palette of `levels` entries and applies
-    a palette-based error diffusion dithering with the specified kernel.
-    """
+    """Multi-level grayscale dithering using palette-based error diffusion."""
     if levels < 2:
         raise ValueError("levels must be >= 2")
 
     if levels == 2:
         palette = [(0, 0, 0), (255, 255, 255)]
     else:
-        palette = [
-            (v, v, v)
-            for v in (np.rint(np.linspace(0, 255, levels)).astype(np.uint8).tolist())
-        ]
+        values = np.rint(np.linspace(0, 255, levels)).astype(np.uint8)
+        palette = [(int(v), int(v), int(v)) for v in values]
 
     d_img = palette_bw(
         img,
         palette=palette,
-        kernel_type=type,
+        kernel_type=kernel_type,
         serpentine=True,
     )
 

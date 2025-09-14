@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
+"""Fan error-diffusion kernels.
+
+Defines the Fan and Shiau-Fan dithering kernels, widely cited in the
+literature on halftoning and error diffusion, along with their alias mappings.
+"""
 
 from __future__ import annotations
 
 from typing import Dict
 
-from .ktype import Kernel
+from ktype import Kernel
 
 FAN: Dict[str, Kernel] = {
     "fan": ([

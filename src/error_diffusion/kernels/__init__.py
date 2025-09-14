@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""Kernel definitions and utilities for error diffusion dithering.
+
+Exposes canonical kernels, aliases, and family groupings along with
+helper functions for kernel resolution and introspection.
+"""
 
 from __future__ import annotations
 

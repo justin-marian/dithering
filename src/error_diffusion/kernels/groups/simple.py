@@ -1,10 +1,22 @@
 # -*- coding: utf-8 -*-
+"""Simple error-diffusion kernels.
+
+Provides lightweight or minimal kernels used for fast dithering:
+- Simple 2D
+- False Floyd-Steinberg
+- Three-pixel
+- Four-pixel
+- Micro
+
+Each kernel is defined with its diffusion offsets and denominator.
+Aliases are also provided for shorthand references.
+"""
 
 from __future__ import annotations
 
 from typing import Dict
 
-from .ktype import Kernel
+from ktype import Kernel
 
 SIMPLE: Dict[str, Kernel] = {
     "simple_2d": ([

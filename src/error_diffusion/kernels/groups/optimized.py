@@ -1,16 +1,23 @@
 # -*- coding: utf-8 -*-
+"""Optimized error-diffusion kernels.
+
+Includes kernels such as Minimized Average Error (MAE) and Pigeon,
+along with their alias mappings.
+"""
 
 from __future__ import annotations
 
 from typing import Dict
 
-from .ktype import Kernel
+from ktype import Kernel
 
 OPTIMIZED: Dict[str, Kernel] = {
     "minimized_average_error": ([
         ((0, +1), 8),  ((0, +2), 4),
-        ((+1, -2), 2), ((+1, -1), 4), ((+1, 0), 8), ((+1, +1), 4), ((+1, +2), 2),
-        ((+2, -2), 1), ((+2, -1), 2), ((+2, 0), 4), ((+2, +1), 2), ((+2, +2), 1),
+        ((+1, -2), 2), ((+1, -1), 4), ((+1, 0), 8),
+        ((+1, +1), 4), ((+1, +2), 2),
+        ((+2, -2), 1), ((+2, -1), 2), ((+2, 0), 4),
+        ((+2, +1), 2), ((+2, +2), 1),
     ], 42),  # https://en.wikipedia.org/wiki/Dither
 
     "pigeon": ([

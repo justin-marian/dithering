@@ -1,10 +1,19 @@
 # -*- coding: utf-8 -*-
+"""Variable static error-diffusion kernels.
+
+Provides static (non-adaptive) versions of variable-coefficient kernels:
+- Ostromoukhov static
+- Zhou-Fang static
+
+Each kernel is defined with fixed diffusion weights and denominator.
+Aliases are also provided for shorthand references.
+"""
 
 from __future__ import annotations
 
 from typing import Dict
 
-from .ktype import Kernel
+from ktype import Kernel
 
 VARIABLE_STATIC: Dict[str, Kernel] = {
     "ostromoukhov_static": ([

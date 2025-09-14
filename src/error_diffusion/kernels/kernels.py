@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+"""Canonical error-diffusion kernels, families, and alias utilities.
+
+Exposes:
+- FAMILIES / ALIASES_FAMILY: kernel definitions grouped by family and their aliases
+- DITHERING_KERNELS: flat map of canonical kernels -> (offsets, denom)
+- KERNEL_ALIASES: alias -> canonical
+- Helpers to resolve names and inspect/list kernels
+"""
 
 from __future__ import annotations
 
@@ -11,7 +19,7 @@ from typing import Any, Dict, List, Tuple
 # Offsets are ((dy, dx), weight) where dy is row offset (down), dx is col offset.
 # Denominator is the designed divisor (often equals weight sum).
 # ----------------------------------------------------------------------
-from .groups import (
+from groups import (
     ARTISTIC,
     ARTISTIC_ALIASES,
     ATKINSON,
@@ -56,6 +64,7 @@ FAMILIES: FamiliesType = {
     "variable_static": VARIABLE_STATIC,
     "experimental": EXPERIMENTAL,
 }
+
 DITHERING_KERNELS: Dict[str, Tuple[List[Tuple[Tuple[int, int], int]], int]] = {
     k: v for k, v in chain.from_iterable(fam.items() for fam in FAMILIES.values())
 }
@@ -79,20 +88,21 @@ KERNEL_ALIASES: Dict[str, str] = {
     k: v for k, v in chain.from_iterable(fam.items() for fam in ALIASES_FAMILY.values())
 }
 
+
 def resolve_kernel_name(name: str) -> str:
     """Resolve alias to canonical kernel name (no-op if already canonical)."""
     return KERNEL_ALIASES.get(name, name)
+
 
 def get_kernel_info(name: str) -> Dict[str, Any]:
     """Inspect kernel details by name or alias."""
     kname = resolve_kernel_name(name)
     if kname not in DITHERING_KERNELS:
         raise ValueError(
-            f"Unsupported kernel '{kname}'. "
-            f"Supported: {list(DITHERING_KERNELS.keys()) + list(KERNEL_ALIASES.keys())}"
+            "Unsupported kernel "
+            f"'{kname}'. Supported: {list(DITHERING_KERNELS.keys()) + list(KERNEL_ALIASES.keys())}"
         )
-    
-    # Extract details about the kernel
+
     offsets, denom = DITHERING_KERNELS[kname]
     # Find family and aliases for this kernel
     family = next((fam for fam, d in FAMILIES.items() if kname in d), None)
@@ -108,15 +118,18 @@ def get_kernel_info(name: str) -> Dict[str, Any]:
         "weight_sum": weight_sum,
         "is_normalized": (denom == weight_sum),
     }
-    
+
+
 def list_available_kernels() -> List[str]:
     """List canonical kernel names (sorted)."""
     return sorted(DITHERING_KERNELS.keys())
 
+
 def list_kernel_aliases() -> Dict[str, str]:
-    """Return alias - canonical mapping (copy)."""
+    """Return alias -> canonical mapping (copy)."""
     return dict(KERNEL_ALIASES)
 
+
 def list_kernels_by_family() -> Dict[str, List[str]]:
-    """Return a mapping family - sorted list of kernel names."""
+    """Return a mapping family -> sorted list of kernel names."""
     return {fam: sorted(d.keys()) for fam, d in FAMILIES.items()}
