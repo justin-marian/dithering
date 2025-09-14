@@ -32,12 +32,31 @@ jobs:
           echo "README.md exists:"
           ls -la README.md || echo "README.md not found"
           
-      - name: Copy README to docs/index.md (no path changes)
+      - name: Copy referenced images from images/ to docs/images/
+        run: |
+          echo "Ensuring docs/images directory exists..."
+          mkdir -p docs/images
+          echo "Finding referenced images in README.md..."
+          grep -oE "images/[a-zA-Z0-9_\-]+\.(jpg|png|gif|svg)" README.md | sort | uniq > used_images.txt
+          echo "Copying referenced images to docs/images..."
+          while read img; do
+            src_img="$img"
+            dst_img="docs/$img"
+            if [ -f "$src_img" ]; then
+              cp "$src_img" "$dst_img"
+              echo "Copied $src_img to $dst_img"
+            else
+              echo "Image $src_img not found, skipping."
+            fi
+          done < used_images.txt
+          rm used_images.txt
+
+      - name: Copy README to docs/index.md
         run: |
           echo "Creating docs directory..."
           mkdir -p docs
-          echo "Copying README.md to docs/index.md without any modifications..."
-          cp README.md docs/index.md
+          echo "Copying README.md to docs/index.md, removing first markdown header..."
+          tail -n +2 README.md > docs/index.md
           
           echo "=== Image references in docs/index.md (unchanged) ==="
           grep -n "images/\|\.jpg\|\.png\|\.gif\|\.svg" docs/index.md || echo "No image references found"
