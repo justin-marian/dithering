@@ -1,10 +1,9 @@
-name: Sync README to docs
+name: Sync README to docs with Jekyll
 
 on:
   push:
     branches: [ main ]
     paths: [ README.md ]
-  # Add manual trigger for testing
   workflow_dispatch:
 
 jobs:
@@ -25,47 +24,83 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
 
-      - name: Debug - Check files
-        run: |
-          echo "Current directory contents:"
-          ls -la
-          echo "README.md exists:"
-          ls -la README.md || echo "README.md not found"
-          
-      - name: Copy README to docs/index.md (rewrite image paths)
+      - name: Setup Jekyll structure
         run: |
           echo "Creating docs directory..."
           mkdir -p docs
+          
+          # Create _config.yml for Jekyll
+          cat > docs/_config.yml << EOF
+          title: ${{ github.event.repository.name }}
+          description: Auto-generated docs from README
+          baseurl: "/${{ github.event.repository.name }}"
+          url: "https://${{ github.actor }}.github.io"
+          
+          # Jekyll settings
+          markdown: kramdown
+          highlighter: rouge
+          theme: minima
+          
+          # Plugin settings
+          plugins:
+            - jekyll-feed
+            - jekyll-sitemap
+          
+          # Exclude files
+          exclude:
+            - README.md
+            - Gemfile
+            - Gemfile.lock
+          EOF
+          
+          # Create Gemfile for dependencies
+          cat > docs/Gemfile << EOF
+          source "https://rubygems.org"
+          gem "github-pages", group: :jekyll_plugins
+          EOF
+          
+          echo "Created Jekyll configuration files"
+
+      - name: Copy and transform README
+        run: |
           echo "Copying README.md to docs/index.md..."
           cp README.md docs/index.md
-          echo "Rewriting image paths..."
+          
+          # Add Jekyll front matter to index.md
+          cat > docs/index.md << EOF
+          ---
+          layout: default
+          title: Home
+          ---
+
+          $(cat README.md)
+          EOF
+          
+          echo "=== Original image references ==="
+          grep -n "images/\|\.jpg\|\.png\|\.gif\|\.svg" README.md || echo "No image references found"
+          
+          echo "Transforming image paths for Jekyll..."
+          # Transform image paths to use Jekyll baseurl
           sed -i 's#src="images/#src="{{ site.baseurl }}/images/#g' docs/index.md
-          echo "Done! Contents of docs directory:"
-          ls -la docs/
+          sed -i 's#](images/#]({{ site.baseurl }}/images/#g' docs/index.md
+          sed -i 's#](./images/#]({{ site.baseurl }}/images/#g' docs/index.md
+          sed -i 's#src="./images/#src="{{ site.baseurl }}/images/#g' docs/index.md
+          
+          echo "=== After transformation ==="
+          grep -n "site.baseurl\|images/" docs/index.md || echo "No transformed references found"
 
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          echo "Git configured"
 
-      - name: Debug - Check git status
+      - name: Commit Jekyll setup
         run: |
-          echo "Git status:"
-          git status
-          echo "Git diff:"
-          git diff
-
-      - name: Commit and push changes
-        run: |
-          git add docs/index.md
-          echo "After git add:"
-          git status
+          git add docs/
           
           if ! git diff --staged --quiet; then
-            echo "Changes detected, committing..."
-            git commit -m "docs: sync README to docs/index.md"
-            echo "Pushing changes..."
+            echo "Committing Jekyll setup..."
+            git commit -m "docs: setup Jekyll and sync README to docs/index.md"
             git push
             echo "Push completed"
           else
