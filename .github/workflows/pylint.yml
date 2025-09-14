@@ -23,6 +23,26 @@ jobs:
           pip install -e .[dev]
           pip install pylint
 
-      - name: Run Pylint
+      - name: Run Pylint with threshold (fail if score < 9.0)
+        shell: bash
         run: |
-          pylint src dither.py
+          set -eo pipefail
+
+          # Run pylint but don't fail on message bitmask
+          REPORT=$(pylint src dither.py --score=y --exit-zero || true)
+          echo "$REPORT"
+
+          # Extract numeric score "Your code has been rated at X.XX/10"
+          SCORE=$(printf "%s\n" "$REPORT" | sed -n 's/.*rated at \([0-9.]\+\)\/10.*/\1/p')
+
+          # Default to 0 if we couldn't parse
+          if [[ -z "$SCORE" ]]; then SCORE=0; fi
+
+          THRESHOLD=9.0
+          echo "Pylint score: $SCORE / 10 (threshold $THRESHOLD)"
+          awk "BEGIN {exit !($SCORE >= $THRESHOLD)}"
+          if [[ $? -ne 0 ]]; then
+            echo "Pylint score below threshold"
+            exit 1
+          fi
+          echo "Pylint score meets threshold"
