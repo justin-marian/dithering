@@ -1,0 +1,20 @@
+# Always include the top-level README and license
+include README.md
+include LICENSE
+
+# Ensure setup.py is included
+include setup.py
+
+# Include all Python sources
+recursive-include src *.py
+
+# Include package data (like kernels, assets, etc.)
+recursive-include src/adaptive_diffusion/kernels/data *.*
+recursive-include src/app/assets *.*
+
+# Exclude caches, build artifacts, and virtualenvs
+prune __pycache__
+prune build
+prune dist
+prune .pytest_cache
+prune .mypy_cache

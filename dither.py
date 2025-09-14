@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""
+Dithering CLI entry point.
+
+Loads (or randomly selects) a demo image and dispatches to one of the dithering
+tasks chosen via CLI args (naive, ordered, random, error/adaptive diffusion, multi-level).
+"""
 
 from __future__ import annotations
 
@@ -20,11 +26,22 @@ from src.app.tasks import (
 ROOT   = Path(__file__).resolve().parent
 ASSETS = ROOT / "assets"
 
+
 def load_demo_image(seed: int | None = None) -> tuple[np.ndarray, str]:
-    """
-    Pick a random image from ./assets (png/jpg/bmp/tif/webp) or 
-    fallback to skimage.data.astronaut().
-    Ensures the image is in RGB format with dtype uint8.
+    """Return an RGB uint8 image and a short name.
+
+    Picks a random image from ./assets (png/jpg/bmp/tif/webp), or falls back to
+    :mod:`skimage.data`'s astronaut if no local images are found. Ensures RGB with dtype=uint8.
+
+    Parameters
+    ----------
+    seed:
+        Optional seed to make the random choice deterministic.
+
+    Returns
+    -------
+    (image, name):
+        `image` is np.ndarray (H, W, 3), dtype uint8. `name` is a short identifier.
     """
     rng = np.random.default_rng(seed)
     candidates: list[Path] = []
@@ -50,7 +67,9 @@ def load_demo_image(seed: int | None = None) -> tuple[np.ndarray, str]:
         img = img_as_ubyte(img)
     return img, name
 
-def main():
+
+def main() -> None:
+    """CLI entry: parse args, load image, and run the requested dithering task."""
     args = parse_args()
     img, img_name = load_demo_image()
 
@@ -61,6 +80,7 @@ def main():
     serp = not args.no_serpentine
 
     def preparse_kernels() -> list[str]:
+        """Split and validate the `--kernels` CSV argument using `check_kernels`."""
         items = [s.strip() for s in args.kernels.split(",") if s.strip()]
         return check_kernels(items)
 
@@ -68,20 +88,23 @@ def main():
         "adaptive_diffusion": lambda: task_adaptive_diffusion(
             img, serpentine=serp, save=args.save, outdir=outdir, img_name=img_name
         ),
-        "error_diffusion":   lambda: task_error_diffusion(
-            img, kernels=preparse_kernels(), threshold=args.threshold,
-            serpentine=serp, save=args.save, outdir=outdir, img_name=img_name
+        "error_diffusion": lambda: task_error_diffusion(
+            img,
+            kernels=preparse_kernels(),
+            threshold=args.threshold,
+            serpentine=serp,
+            save=args.save,
+            outdir=outdir,
+            img_name=img_name,
         ),
-        "naive":             lambda: task_naive(
+        "naive": lambda: task_naive(
             img, threshold=args.threshold, save=args.save, outdir=outdir, img_name=img_name
         ),
-        "ordered":           lambda: task_ordered(
+        "ordered": lambda: task_ordered(
             img, n=args.bayer_n, save=args.save, outdir=outdir, img_name=img_name
         ),
-        "random":            lambda: task_random(
-            img, save=args.save, outdir=outdir, img_name=img_name
-        ),
-        "multi_level":       lambda: task_multi_level(
+        "random": lambda: task_random(img, save=args.save, outdir=outdir, img_name=img_name),
+        "multi_level": lambda: task_multi_level(
             img, levels=args.levels, save=args.save, outdir=outdir, img_name=img_name
         ),
     }
@@ -90,6 +113,12 @@ def main():
     if run is None:
         raise SystemExit(f"Unknown task: {args.task}")
     run()
+
+    run = dispatch.get(args.task)
+    if run is None:
+        raise SystemExit(f"Unknown task: {args.task}")
+    run()
+
 
 if __name__ == "__main__":
     main()

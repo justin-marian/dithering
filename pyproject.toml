@@ -33,17 +33,16 @@ dev = [
   "ruff>=0.5",
   "black>=25.1.0",
   "mypy>=1.7",
-  "pytest>=8.0",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = [
-  { include = "adaptive_diffusion", from = "src" },
-  { include = "error_diffusion", from = "src" },
-  { include = "multi_level", from = "src" },
-  { include = "naive", from = "src" },
-  { include = "ordered", from = "src" },
-  { include = "random", from = "src" },
+  "adaptive_diffusion",
+  "error_diffusion",
+  "multi_level",
+  "naive",
+  "ordered",
+  "random",
 ]
 
 # Extra files to include alongside the wheel (not as packages)
@@ -60,7 +59,7 @@ include = [
 [tool.ruff]
 line-length = 100
 target-version = "py310"
-src = ["src", "tests"]
+src = ["src"]
 extend-select = ["E", "F", "I"]
 
 [tool.black]
