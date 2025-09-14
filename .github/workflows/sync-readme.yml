@@ -4,6 +4,8 @@ on:
   push:
     branches: [ main ]
     paths: [ README.md ]
+  # Add manual trigger for testing
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -12,29 +14,60 @@ jobs:
       contents: write
 
     steps:
+      - name: Debug - Print event info
+        run: |
+          echo "Event: ${{ github.event_name }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Repository: ${{ github.repository }}"
+          
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
 
+      - name: Debug - Check files
+        run: |
+          echo "Current directory contents:"
+          ls -la
+          echo "README.md exists:"
+          ls -la README.md || echo "README.md not found"
+          
       - name: Copy README to docs/index.md (rewrite image paths)
         run: |
+          echo "Creating docs directory..."
           mkdir -p docs
+          echo "Copying README.md to docs/index.md..."
           cp README.md docs/index.md
-          # Rewrite relative image paths (src="images/...) to use site.baseurl
+          echo "Rewriting image paths..."
           sed -i 's#src="images/#src="{{ site.baseurl }}/images/#g' docs/index.md
+          echo "Done! Contents of docs directory:"
+          ls -la docs/
 
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          echo "Git configured"
+
+      - name: Debug - Check git status
+        run: |
+          echo "Git status:"
+          git status
+          echo "Git diff:"
+          git diff
 
       - name: Commit and push changes
         run: |
           git add docs/index.md
+          echo "After git add:"
+          git status
+          
           if ! git diff --staged --quiet; then
+            echo "Changes detected, committing..."
             git commit -m "docs: sync README to docs/index.md"
+            echo "Pushing changes..."
             git push
+            echo "Push completed"
           else
             echo "No changes to commit"
           fi
