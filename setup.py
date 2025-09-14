@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+
 from setuptools import find_packages, setup
 
 ROOT = Path(__file__).parent
