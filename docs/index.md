@@ -1,8 +1,7 @@
 # dithering
 
 <p align="center">
-    <img src="https://github.com/justin-marian/dithering/blob/main/images/diterhing.jpg" alt="Dithering Lab" width="3600" height="180">
-  </a>
+  <img src="../images/dithering.jpg" alt="Dithering Lab" width="3600" height="180">
 </p>
 
 Collection of classic and modern dithering algorithms that convert grayscale/color images to black & white using various error distribution techniques.
