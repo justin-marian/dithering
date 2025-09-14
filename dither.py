@@ -114,11 +114,5 @@ def main() -> None:
         raise SystemExit(f"Unknown task: {args.task}")
     run()
 
-    run = dispatch.get(args.task)
-    if run is None:
-        raise SystemExit(f"Unknown task: {args.task}")
-    run()
-
-
 if __name__ == "__main__":
     main()

@@ -10,14 +10,14 @@ from pathlib import Path
 from typing import List, Tuple
 
 import numpy as np
-from visualize import show_images
 
-from adaptive_diffusion import adaptive_diff_bw
-from error_diffusion import error_diff_bw
-from multi_level import palette_bw
-from naive import threshold_bw
-from ordered import ordered_bw
-from utils import grayscale
+from ..adaptive_diffusion import adaptive_diff_bw
+from ..error_diffusion import error_diff_bw
+from ..multi_level import palette_bw
+from ..naive import threshold_bw
+from ..ordered import ordered_bw
+from ..utils import grayscale
+from .visualize import show_images
 
 THIS_FILE = Path(__file__).resolve()
 ROOT = THIS_FILE.parents[2]

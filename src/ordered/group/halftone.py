@@ -6,9 +6,9 @@ from __future__ import annotations
 from typing import Literal, Union
 
 import numpy as np
-from spot import spot_threshold
 
-from utils import binarize, grayscale
+from ...utils.grayscale import binarize, grayscale
+from .spot import spot_threshold
 
 
 def halftone_bw(

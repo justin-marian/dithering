@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Dict
 
-from ktype import Kernel
+from .ktype import Kernel
 
 CLASSIC: Dict[str, Kernel] = {
     "floyd_steinberg": ([

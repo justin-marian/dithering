@@ -10,14 +10,14 @@ from __future__ import annotations
 from typing import Iterable, List, Tuple
 
 import numpy as np
-from nearest import nearest_color
 
-from error_diffusion.kernels import (
+from ..error_diffusion.kernels import (
     DITHERING_KERNELS,
     KERNEL_ALIASES,
     resolve_kernel_name,
 )
-from utils import tuple_prepare_img
+from ..utils.prep_img import tuple_prepare_img
+from .nearest import nearest_color
 
 
 def normalize_kernel(

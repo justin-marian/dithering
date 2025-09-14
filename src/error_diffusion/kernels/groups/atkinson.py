@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Dict
 
-from ktype import Kernel
+from .ktype import Kernel
 
 ATKINSON: Dict[str, Kernel] = {
     "atkinson": ([

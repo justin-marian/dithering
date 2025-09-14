@@ -19,7 +19,7 @@ from typing import Any, Dict, List, Tuple
 # Offsets are ((dy, dx), weight) where dy is row offset (down), dx is col offset.
 # Denominator is the designed divisor (often equals weight sum).
 # ----------------------------------------------------------------------
-from groups import (
+from .groups import (
     ARTISTIC,
     ARTISTIC_ALIASES,
     ATKINSON,

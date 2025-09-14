@@ -10,9 +10,9 @@ from __future__ import annotations
 from typing import List, Literal, Tuple, Union
 
 import numpy as np
-from kernels import DITHERING_KERNELS, KERNEL_ALIASES, resolve_kernel_name
 
-from utils import binarize, grayscale, map_threshold_graydomain
+from ..utils.grayscale import binarize, grayscale, map_threshold_graydomain
+from .kernels import DITHERING_KERNELS, KERNEL_ALIASES, resolve_kernel_name
 
 
 def error_diff_bw(

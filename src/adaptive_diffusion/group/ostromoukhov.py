@@ -15,9 +15,9 @@ import pathlib
 from typing import Literal, Union
 
 import numpy as np
-from kernels import load_ostro_coeffs
 
-from utils import binarize, grayscale, map_threshold_graydomain
+from ...utils import binarize, grayscale, map_threshold_graydomain
+from ..kernels import load_ostro_coeffs
 
 _THIS_FILE = pathlib.Path(__file__).resolve()
 _THIS_DIR = _THIS_FILE.parent

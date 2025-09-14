@@ -10,9 +10,9 @@ from __future__ import annotations
 from typing import Literal, Union
 
 import numpy as np
-from group import global_threshold, mean_threshold, otsu_threshold, percentile_threshold
 
-from utils import binarize, grayscale
+from ..utils.grayscale import binarize, grayscale
+from .group import global_threshold, mean_threshold, otsu_threshold, percentile_threshold
 
 
 def threshold_bw(

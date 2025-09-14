@@ -11,7 +11,7 @@ from typing import Literal, Union
 
 import numpy as np
 
-from utils import map_threshold_graydomain
+from ...utils.grayscale import map_threshold_graydomain
 
 
 def global_threshold(

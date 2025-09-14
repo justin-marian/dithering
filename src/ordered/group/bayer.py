@@ -7,7 +7,7 @@ from typing import Literal, Union
 
 import numpy as np
 
-from utils import binarize, grayscale
+from ...utils.grayscale import binarize, grayscale
 
 # Predefined Bayer matrices (normalized to [0,1))
 BAYER_2: np.ndarray = (1 / 4) * np.array(

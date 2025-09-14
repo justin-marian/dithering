@@ -10,7 +10,7 @@ import argparse
 from textwrap import dedent
 from typing import Dict, List, Set
 
-from error_diffusion.kernels import (
+from ..error_diffusion.kernels import (
     ALIASES_FAMILY,
     DITHERING_KERNELS,
     KERNEL_ALIASES,

@@ -11,8 +11,9 @@ from __future__ import annotations
 from typing import Literal, Union
 
 import numpy as np
-from group.bayer import bayer_bw, bayer_matrix
-from group.halftone import halftone_bw
+
+from .group.bayer import bayer_bw, bayer_matrix
+from .group.halftone import halftone_bw
 
 
 def ordered_bw(

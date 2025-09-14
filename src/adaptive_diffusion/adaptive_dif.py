@@ -10,7 +10,8 @@ from __future__ import annotations
 from typing import Literal, Union
 
 import numpy as np
-from group import ostromoukhov_bw, zhou_fang_bw
+
+from .group import ostromoukhov_bw, zhou_fang_bw
 
 
 def adaptive_diff_bw(

@@ -12,12 +12,12 @@ from __future__ import annotations
 from typing import Literal, Optional, Union
 
 import numpy as np
-from group.normal import normal_distribution
-from group.uniform import uniform_distrib
-from mode.additive import addition
-from mode.jitter import jitter
 
-from utils import binarize, grayscale, map_threshold_graydomain
+from ..utils.grayscale import binarize, grayscale, map_threshold_graydomain
+from .group.normal import normal_distribution
+from .group.uniform import uniform_distrib
+from .mode.additive import addition
+from .mode.jitter import jitter
 
 
 def random_bw(
