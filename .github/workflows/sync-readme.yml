@@ -4,6 +4,7 @@ on:
   push:
     branches: [ main ]
     paths: [ README.md ]
+  # Add manual trigger for testing
   workflow_dispatch:
 
 jobs:
