@@ -32,38 +32,15 @@ jobs:
           echo "README.md exists:"
           ls -la README.md || echo "README.md not found"
           
-      - name: Copy README to docs/index.md (rewrite image paths)
+      - name: Copy README to docs/index.md (no path changes)
         run: |
           echo "Creating docs directory..."
           mkdir -p docs
-          echo "Copying README.md to docs/index.md..."
+          echo "Copying README.md to docs/index.md without any modifications..."
           cp README.md docs/index.md
           
-          echo "=== Original image references in README.md ==="
-          grep -n "images/\|\.jpg\|\.png\|\.gif\|\.svg" README.md || echo "No image references found in README.md"
-          
-          echo "=== Before transformation in docs/index.md ==="
-          grep -n "images/" docs/index.md || echo "No 'images/' found in docs/index.md"
-          
-          echo "Rewriting image paths..."
-          # Fix multiple patterns for image references
-          # Pattern 1: src="images/..." 
-          sed -i 's#src="images/#src="{{ site.baseurl }}/images/#g' docs/index.md
-          
-          # Pattern 2: ![alt](images/...)
-          sed -i 's#](images/#]({{ site.baseurl }}/images/#g' docs/index.md
-          
-          # Pattern 3: ![alt text](./images/...)
-          sed -i 's#](./images/#]({{ site.baseurl }}/images/#g' docs/index.md
-          
-          # Pattern 4: <img src="./images/...
-          sed -i 's#src="./images/#src="{{ site.baseurl }}/images/#g' docs/index.md
-          
-          # Pattern 5: Any remaining relative paths to images/
-          sed -i 's#="images/#="{{ site.baseurl }}/images/#g' docs/index.md
-          
-          echo "=== After transformation in docs/index.md ==="
-          grep -n "images/\|site.baseurl" docs/index.md || echo "No image references found after transformation"
+          echo "=== Image references in docs/index.md (unchanged) ==="
+          grep -n "images/\|\.jpg\|\.png\|\.gif\|\.svg" docs/index.md || echo "No image references found"
           
           echo "Done! Contents of docs directory:"
           ls -la docs/
