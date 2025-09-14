@@ -1,4 +1,3 @@
-# dithering
 
 <p align="center">
   <img src="images/dithering.jpg" alt="Dithering" width="1080" height="320">
