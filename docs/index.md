@@ -1,7 +1,7 @@
 # dithering
 
 <p align="center">
-  <img src="{{ site.baseurl }}/images/dithering.jpg" alt="Dithering" width="360" height="180">
+  <img src="{{ site.baseurl }}/images/dithering.jpg" alt="Dithering" width="1080" height="320">
 </p>
 
 Collection of classic and modern dithering algorithms that convert grayscale/color images to black & white using various error distribution techniques.
