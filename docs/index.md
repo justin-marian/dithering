@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/justin-marian/dithering/" target="_blank" rel="noopener">
-    <img src="images/diterhing.jpg" alt="Dithering Lab" width="3600" height="180">
+    <img src="../images/diterhing.jpg" alt="Dithering Lab" width="3600" height="180">
   </a>
 </p>
 
