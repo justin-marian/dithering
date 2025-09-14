@@ -1,3 +1,8 @@
+---
+layout: default
+title: Home
+---
+
 # dithering
 
 <p align="center">

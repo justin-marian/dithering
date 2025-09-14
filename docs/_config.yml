@@ -1,1 +1,20 @@
+title: dithering
+description: Auto-generated docs from README
 baseurl: "/dithering"
+url: "https://justin-marian.github.io"
+
+# Jekyll settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# Plugin settings
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Exclude files
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
