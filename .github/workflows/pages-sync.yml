@@ -16,10 +16,12 @@ jobs:
         with:
           persist-credentials: true
 
-      - name: Copy README to docs/index.md
+      - name: Copy README to docs/index.md (rewrite image paths)
         run: |
           mkdir -p docs
           cp README.md docs/index.md
+          # Rewrite relative image paths (src="images/...) to use site.baseurl
+          sed -i 's#src="images/#src="{{ site.baseurl }}/images/#g' docs/index.md
 
       - name: Commit changes (if any)
         run: |
@@ -35,7 +37,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if git log -1 --pretty=%B | grep -q "docs: sync README"; then
-            # make sure we use the token-authenticated remote
+            # Use token-authenticated remote
             git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/justin-marian/dithering.git
             git push origin HEAD:main
           fi
